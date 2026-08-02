@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Executive Sales Report</title>
+    
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        display: flex; /* Flexbox creates the side-by-side layout */
+    }
+    
+    /* Navigation Sidebar */
+    .sidebar {
+        width: 220px;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        background-color: #1a365d;
+        padding: 30px 20px;
+        color: white;
+    }
+    .sidebar h3 {
+        color: #ebf8ff;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .sidebar a {
+        display: block;
+        color: #cbd5e0;
+        text-decoration: none;
+        padding: 10px 0;
+        transition: color 0.2s;
+        font-weight: 500;
+    }
+    .sidebar a:hover {
+        color: #ffffff;
+    }
+    
+    /* Main Content Area */
+    .content {
+        margin-left: 260px; /* Leave space for the sidebar */
+        padding: 40px;
+        max-width: 900px;
+        width: 100%;
+    }
+    
+    /* Document Elements styling */
+    h1 { color: #1a365d; border-bottom: 2px solid #2b6cb0; padding-bottom: 10px; }
+    h2 { color: #2c5282; margin-top: 40px; scroll-margin-top: 20px; } /* scroll-margin stops header getting blocked */
+    h3 { color: #4a5568; }
+    hr { border: 0; height: 1px; background: #cbd5e0; margin: 20px 0; }
+    
+    /* Table Styling */
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        background-color: #ffffff;
+    }
+    .styled-table th {
+        background-color: #2b6cb0;
+        color: white;
+        text-align: left;
+        padding: 12px 15px;
+    }
+    .styled-table td { padding: 12px 15px; border-bottom: 1px solid #edf2f7; }
+    .styled-table tr:nth-of-type(even) { background-color: #f7fafc; }
+    .styled-table tr:last-of-type { border-bottom: 2px solid #2b6cb0; }
+</style>
+
+</head>
+<body>
+    
+<div class="sidebar">
+    <h3>Report Menu</h3>
+    <a href="#summary">📋 Executive Summary</a>
+    <a href="#breakdown">📊 Regional Breakdown</a>
+    <a href="#insights">📈 Visual Insights</a>
+</div>
+
+    <div class="content">
+        <h1>Executive Performance Report</h1>
+<p><strong>Date:</strong> July 2026 | <strong>Prepared by:</strong> Data Analytics Team</p>
+<hr />
+<h2 id="summary">Executive Summary</h2>
+<p>This report outlines regional sales performance, highlighting growth trajectories and dominant product verticals across global markets. Total consolidated revenue reached <strong>$85.4M</strong>, driven heavily by expansion in emerging tech hubs.</p>
+<h3>Key Metrics</h3>
+<ul>
+<li><strong>Total Revenue:</strong> $85.4M</li>
+<li><strong>Average Regional Growth:</strong> 9.0%</li>
+<li><strong>Top Performing Region:</strong> Asia-Pacific</li>
+</ul>
+<hr />
+<h2 id="breakdown">Regional Breakdown</h2>
+<p>Below is the compiled performance data for the current fiscal period.</p>
+<table border="1" class="dataframe styled-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Region</th>
+      <th>Revenue_M</th>
+      <th>Growth_Rate</th>
+      <th>Top_Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>North America</td>
+      <td>$24.5M</td>
+      <td>0.1%</td>
+      <td>Electronics</td>
+    </tr>
+    <tr>
+      <td>Europe</td>
+      <td>$18.2M</td>
+      <td>0.0%</td>
+      <td>Apparel</td>
+    </tr>
+    <tr>
+      <td>Asia-Pacific</td>
+      <td>$29.1M</td>
+      <td>0.1%</td>
+      <td>Electronics</td>
+    </tr>
+    <tr>
+      <td>Latin America</td>
+      <td>$8.4M</td>
+      <td>0.1%</td>
+      <td>Furniture</td>
+    </tr>
+    <tr>
+      <td>Middle East</td>
+      <td>$5.2M</td>
+      <td>0.1%</td>
+      <td>Beauty</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+<h2 id="insights">Visual Insights</h2>
+<p>The chart below illustrates the revenue distributions alongside the primary product driver for each territory.</p>
+<div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.1.0.min.js" integrity="sha256-Ei4740bWZhaUTQuD6q9yQlgVCMPBz6CZWhevDYPv93A=" crossorigin="anonymous"></script>                <div id="5ca2a50e-deef-4e87-9beb-0b268d043e7e" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("5ca2a50e-deef-4e87-9beb-0b268d043e7e")) {                    Plotly.newPlot(                        "5ca2a50e-deef-4e87-9beb-0b268d043e7e",                        [{"hovertemplate":"Dominant Category=Electronics\u003cbr\u003eRegion=%{x}\u003cbr\u003eRevenue (Millions USD)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Electronics","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"Electronics","orientation":"v","showlegend":true,"textposition":"auto","x":["North America","Asia-Pacific"],"xaxis":"x","y":{"dtype":"f8","bdata":"AAAAAACAOECamZmZmRk9QA=="},"yaxis":"y","type":"bar"},{"hovertemplate":"Dominant Category=Apparel\u003cbr\u003eRegion=%{x}\u003cbr\u003eRevenue (Millions USD)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Apparel","marker":{"color":"#EF553B","pattern":{"shape":""}},"name":"Apparel","orientation":"v","showlegend":true,"textposition":"auto","x":["Europe"],"xaxis":"x","y":{"dtype":"f8","bdata":"MzMzMzMzMkA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Dominant Category=Furniture\u003cbr\u003eRegion=%{x}\u003cbr\u003eRevenue (Millions USD)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Furniture","marker":{"color":"#00cc96","pattern":{"shape":""}},"name":"Furniture","orientation":"v","showlegend":true,"textposition":"auto","x":["Latin America"],"xaxis":"x","y":{"dtype":"f8","bdata":"zczMzMzMIEA="},"yaxis":"y","type":"bar"},{"hovertemplate":"Dominant Category=Beauty\u003cbr\u003eRegion=%{x}\u003cbr\u003eRevenue (Millions USD)=%{y}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"Beauty","marker":{"color":"#ab63fa","pattern":{"shape":""}},"name":"Beauty","orientation":"v","showlegend":true,"textposition":"auto","x":["Middle East"],"xaxis":"x","y":{"dtype":"f8","bdata":"zczMzMzMFEA="},"yaxis":"y","type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Region"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Revenue (Millions USD)"}},"legend":{"title":{"text":"Dominant Category"},"tracegroupgap":0},"title":{"text":"Revenue & Top Categories by Region"},"barmode":"relative"},                        {"responsive": true}                    )                };            </script>        </div>
+
+<hr />
+<p style="text-align: center; color: #777; font-size: 0.8em;">Confidential - Internal Use Only</p>
+    </div>
+</body>
+</html>
