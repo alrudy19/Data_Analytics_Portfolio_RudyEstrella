@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supply Chain Optimization with Python — Rudy Estrella</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page:           #f9f9f7;
+    --card:           #ffffff;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --axis:           #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-1:       #2a78d6;   /* blue — accent / recommended */
+    --series-neutral: #9a9a94;   /* gray — baseline / reference */
+    --good:           #0ca30c;
+    --seq-150: #b7d3f6; --seq-200: #9ec5f4; --seq-250: #86b6ef;
+    --seq-300: #6da7ec; --seq-350: #5598e7; --seq-400: #3987e5;
+    --seq-450: #2a78d6; --seq-600: #184f95; --seq-700: #0d366b;
+    --code-bg: #f4f3f0;
+    --code-text: #2b2a27;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page:           #0d0d0d;
+      --card:           #171716;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --axis:           #383835;
+      --border:         rgba(255,255,255,0.12);
+      --series-1:       #3987e5;
+      --series-neutral: #6f6f68;
+      --good:           #0ca30c;
+      --code-bg: #111110;
+      --code-text: #d7d6d0;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page:           #0d0d0d;
+    --card:           #171716;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --axis:           #383835;
+    --border:         rgba(255,255,255,0.12);
+    --series-1:       #3987e5;
+    --series-neutral: #6f6f68;
+    --good:           #0ca30c;
+    --code-bg: #111110;
+    --code-text: #d7d6d0;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page);
+    color: var(--text-primary);
+    line-height: 1.55;
+  }
+  a { color: var(--series-1); }
+
+  /* ---- Nav ---- */
+  header.nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--card) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    max-width: 1120px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { font-weight: 700; font-size: 15px; letter-spacing: .2px; white-space: nowrap; }
+  .brand span { color: var(--text-muted); font-weight: 500; }
+  nav.menu { display: flex; gap: 4px; flex-wrap: wrap; }
+  nav.menu a {
+    text-decoration: none; color: var(--text-secondary);
+    font-size: 13.5px; font-weight: 600; padding: 8px 12px; border-radius: 7px;
+    transition: background .15s, color .15s;
+  }
+  nav.menu a:hover { background: var(--surface-1); color: var(--text-primary); }
+  nav.menu a.active { color: var(--series-1); background: color-mix(in srgb, var(--series-1) 12%, transparent); }
+  .theme-toggle {
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary);
+    border-radius: 7px; padding: 7px 10px; font-size: 12px; cursor: pointer; font-weight: 600;
+  }
+
+  main { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- Hero ---- */
+  .hero { padding: 56px 0 40px; border-bottom: 1px solid var(--border); }
+  .kicker { color: var(--series-1); font-weight: 700; font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; }
+  h1.title { font-size: clamp(28px, 4vw, 40px); margin: 10px 0 12px; letter-spacing: -0.02em; }
+  .lede { color: var(--text-secondary); font-size: 16.5px; max-width: 68ch; margin: 0 0 28px; }
+  .byline { color: var(--text-muted); font-size: 13.5px; margin-bottom: 28px; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .stat-tile {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 18px 16px;
+  }
+  .stat-tile .label { font-size: 12.5px; color: var(--text-secondary); font-weight: 600; }
+  .stat-tile .value { font-size: 30px; font-weight: 700; margin-top: 6px; letter-spacing: -0.01em; }
+  .stat-tile .sub { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
+  .stat-tile .value.good { color: var(--good); }
+
+  /* ---- Sections ---- */
+  section { padding: 56px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 74px; }
+  section:last-of-type { border-bottom: none; }
+  .eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+  h2 { font-size: 26px; margin: 8px 0 6px; letter-spacing: -0.01em; }
+  .method-tag {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600;
+    color: var(--series-1); background: color-mix(in srgb, var(--series-1) 12%, transparent);
+    padding: 4px 10px; border-radius: 999px; margin: 10px 0 20px;
+  }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; } .stat-row { grid-template-columns: 1fr; } }
+
+  .prose p { color: var(--text-secondary); margin: 0 0 14px; }
+  .prose strong { color: var(--text-primary); }
+  .callout {
+    background: var(--surface-1); border: 1px solid var(--border); border-left: 3px solid var(--series-1);
+    border-radius: 8px; padding: 14px 16px; margin: 18px 0; font-size: 14px; color: var(--text-secondary);
+  }
+  .callout b { color: var(--text-primary); }
+
+  .chart-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  }
+  .chart-title { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+  .chart-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+  svg text { fill: var(--text-secondary); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .bar-label { fill: var(--text-primary); font-weight: 700; font-size: 12px; }
+  .axis-label { fill: var(--text-muted); font-size: 11px; }
+  .legend-row { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+  .mini-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .mini-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--surface-1); }
+  .mini-card .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+  .mini-card .num { font-size: 20px; font-weight: 700; margin-top: 4px; }
+  .mini-card .num.accent { color: var(--series-1); }
+  .mini-card .detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  table.heat { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.heat th { text-align: left; font-weight: 600; color: var(--text-muted); font-size: 11.5px; padding: 6px 8px; }
+  table.heat td { padding: 0; }
+  .cell { padding: 14px 6px; text-align: center; font-weight: 700; border-radius: 6px; }
+  .cell.empty { color: var(--text-muted); font-weight: 500; background: var(--surface-1); }
+  .row-head { font-weight: 600; color: var(--text-primary); padding: 8px 8px !important; white-space: nowrap; }
+
+  .scale-legend { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 11.5px; color: var(--text-muted); }
+  .scale-bar { flex: 1; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--seq-150), var(--seq-700)); max-width: 220px; }
+
+  details.code-toggle { margin-top: 18px; }
+  details.code-toggle summary {
+    cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--text-secondary);
+    list-style: none; display: flex; align-items: center; gap: 6px; padding: 8px 0;
+  }
+  details.code-toggle summary::-webkit-details-marker { display: none; }
+  details.code-toggle summary::before { content: "▸"; color: var(--series-1); transition: transform .15s; }
+  details.code-toggle[open] summary::before { transform: rotate(90deg); }
+  pre.code {
+    background: var(--code-bg); color: var(--code-text); border-radius: 10px; padding: 16px;
+    font-size: 12.5px; line-height: 1.6; overflow-x: auto; margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .takeaway-list { display: grid; gap: 12px; margin-top: 18px; }
+  .takeaway { display: flex; gap: 12px; align-items: flex-start; }
+  .takeaway .num {
+    flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--series-1); color: white;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+  }
+  .takeaway p { margin: 0; color: var(--text-secondary); font-size: 14.5px; }
+  .takeaway strong { color: var(--text-primary); }
+
+  .stack-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 14px; }
+  .stack-table th, .stack-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--gridline); }
+  .stack-table th { color: var(--text-muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .03em; }
+
+  footer { padding: 44px 0 60px; }
+  .footer-grid { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+  footer .foot-title { font-weight: 700; margin-bottom: 6px; }
+  footer p { color: var(--text-secondary); font-size: 13.5px; margin: 4px 0; }
+  .btn {
+    display: inline-block; margin-top: 12px; padding: 9px 16px; border-radius: 8px;
+    background: var(--series-1); color: white; text-decoration: none; font-size: 13px; font-weight: 700;
+  }
+  .table-toggle-link { font-size: 12px; color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">Rudy Estrella <span>· Data Analytics Portfolio</span></div>
+    <nav class="menu" id="menu">
+      <a href="#overview">Overview</a>
+      <a href="#inventory">Inventory</a>
+      <a href="#transportation">Network Flow</a>
+      <a href="#routing">Routing</a>
+      <a href="#methodology">Methodology</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button">Dark mode</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="overview">
+    <div class="kicker">Case study · Operations Research in Python</div>
+    <h1 class="title">Supply Chain Optimization with Python</h1>
+    <p class="lede">
+      Three real supply-chain decisions — how much to order, which warehouse should
+      ship to which region, and what order a delivery truck should visit stops in —
+      each solved with the optimization technique that actually matches its
+      structure, and translated into dollars, orders, and miles a business reader
+      can act on.
+    </p>
+    <div class="byline">Rudy Estrella · Python, NumPy, SciPy, NetworkX · Source notebook included below</div>
+
+    <div class="stat-row">
+      <div class="stat-tile">
+        <div class="label">Freight cost reduction</div>
+        <div class="value good">12.0%</div>
+        <div class="sub">vs. proportional warehouse allocation · $798.65 saved</div>
+      </div>
+      <div class="stat-tile">
+        <div class="label">Delivery distance reduction</div>
+        <div class="value good">15.8%</div>
+        <div class="sub">15 mi/run saved · ~3,750 mi/year at 250 runs</div>
+      </div>
+      <div class="stat-tile">
+        <div class="label">Optimal 6-period inventory plan</div>
+        <div class="value">$300</div>
+        <div class="sub">Just-in-time ordering, $0 holding cost — proven optimal</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INVENTORY ================= -->
+  <section id="inventory">
+    <div class="eyebrow">Case study 1 of 3</div>
+    <h2>Multi-Period Inventory Lot-Sizing</h2>
+    <div class="method-tag">⚙ Dynamic programming — Wagner–Whitin algorithm</div>
+
+    <div class="split">
+      <div class="prose">
+        <p>
+          <strong>The business question:</strong> a distributor knows demand for the
+          next 6 periods. Every order carries a fixed cost (PO processing, receiving,
+          supplier minimums); every unit carried in inventory costs money to hold.
+          Order every period and rack up fixed fees, or batch demand together and
+          pay more to hold stock? The right answer depends on the numbers, not
+          intuition.
+        </p>
+        <p>
+          This is a textbook <strong>dynamic lot-sizing problem</strong>, which has a
+          known, provably-optimal algorithm. The original notebook applied a
+          general-purpose continuous optimizer to what is actually a discrete,
+          combinatorial choice — <em>which periods to order in</em>. That mismatch
+          made results dependent on the solver's starting guess. Replacing it with
+          <strong>Wagner–Whitin</strong> — a dynamic program built for exactly this
+          problem — guarantees the true minimum-cost plan rather than "a plan that
+          converged."
+        </p>
+
+        <div class="callout">
+          <b>Result:</b> with this cost structure, ordering exactly what's needed
+          <b>every period</b> (just-in-time) beats any batching — holding even
+          one period's demand one extra period costs more than a second $50 order
+          fee. 6 orders, $300 total cost, $0 holding cost.
+        </div>
+
+        <p>
+          <strong>Sensitivity check.</strong> A real analysis tests the assumption,
+          not just the base case. If the per-order fee rose to $400 (e.g. a supplier
+          minimum-order surcharge), the algorithm correctly flips strategy —
+          batching periods together because carrying extra stock is now the
+          cheaper option:
+        </p>
+        <div class="mini-compare">
+          <div class="mini-card">
+            <div class="tag">Base case · $50/order</div>
+            <div class="num accent">6 orders</div>
+            <div class="detail">$300 total cost · $0 holding</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag">What-if · $400/order</div>
+            <div class="num">4 orders</div>
+            <div class="detail">$2,200 total cost · batches periods 1–2 &amp; 5–6</div>
+          </div>
+        </div>
+
+        <details class="code-toggle">
+          <summary>View the Wagner–Whitin implementation</summary>
+          <pre class="code">def wagner_whitin(demand, holding_cost, order_cost):
+    n = len(demand)
+    cost = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(i, n):
+            units_carried = sum((k - i) * demand[k] for k in range(i, j + 1))
+            cost[i][j] = order_cost + units_carried * holding_cost
+
+    f = [0.0] * (n + 1)              # f[j] = min cost to cover periods 0..j-1
+    order_start = [None] * (n + 1)
+    for j in range(1, n + 1):
+        best_cost, best_i = float("inf"), None
+        for i in range(j):
+            candidate = f[i] + cost[i][j - 1]
+            if candidate < best_cost:
+                best_cost, best_i = candidate, i
+        f[j], order_start[j] = best_cost, best_i
+
+    order_qty, j = [0] * n, n
+    while j > 0:
+        i = order_start[j]
+        order_qty[i] = sum(demand[i:j])
+        j = i
+    return order_qty, f[n]</pre>
+        </details>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Optimal Order Plan by Period</div>
+        <div class="chart-subtitle">Order quantity exactly matches forecast demand every period (JIT)</div>
+        <svg viewBox="0 0 460 260" width="100%" role="img" aria-label="Bar chart of optimal order quantity by period">
+          <!-- gridlines -->
+          <g stroke="var(--gridline)" stroke-width="1">
+            <line x1="40" y1="20" x2="40" y2="210"></line>
+            <line x1="40" y1="210" x2="440" y2="210"></line>
+          </g>
+          <!-- bars: values 100,150,200,250,300,150 scaled to max 300 -> height 170px band -->
+          <!-- x positions for 6 bars across 40..440 -->
+          <g>
+            <rect x="52"  y="146.7" width="44" height="63.3" rx="4" fill="var(--series-1)"></rect>
+            <rect x="120" y="115"   width="44" height="95"   rx="4" fill="var(--series-1)"></rect>
+            <rect x="188" y="83.3"  width="44" height="126.7" rx="4" fill="var(--series-1)"></rect>
+            <rect x="256" y="51.7"  width="44" height="158.3" rx="4" fill="var(--series-1)"></rect>
+            <rect x="324" y="20"    width="44" height="190"   rx="4" fill="var(--series-1)"></rect>
+            <rect x="392" y="115"   width="44" height="95"   rx="4" fill="var(--series-1)"></rect>
+          </g>
+          <g class="bar-label" text-anchor="middle">
+            <text x="74"  y="141">100</text>
+            <text x="142" y="109">150</text>
+            <text x="210" y="77">200</text>
+            <text x="278" y="46">250</text>
+            <text x="346" y="15">300</text>
+            <text x="414" y="109">150</text>
+          </g>
+          <g class="axis-label" text-anchor="middle">
+            <text x="74"  y="226">P1</text>
+            <text x="142" y="226">P2</text>
+            <text x="210" y="226">P3</text>
+            <text x="278" y="226">P4</text>
+            <text x="346" y="226">P5</text>
+            <text x="414" y="226">P6</text>
+          </g>
+        </svg>
+        <div class="legend-row">
+          <span class="legend-item"><span class="swatch" style="background:var(--series-1)"></span>Optimal order quantity (units)</span>
+        </div>
+        <details class="code-toggle">
+          <summary>View data table</summary>
+          <table class="stack-table">
+            <thead><tr><th>Period</th><th>Forecast demand</th><th>Optimal order qty</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>100</td><td>100</td></tr>
+              <tr><td>2</td><td>150</td><td>150</td></tr>
+              <tr><td>3</td><td>200</td><td>200</td></tr>
+              <tr><td>4</td><td>250</td><td>250</td></tr>
+              <tr><td>5</td><td>300</td><td>300</td></tr>
+              <tr><td>6</td><td>150</td><td>150</td></tr>
+            </tbody>
+          </table>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TRANSPORTATION ================= -->
+  <section id="transportation">
+    <div class="eyebrow">Case study 2 of 3</div>
+    <h2>Warehouse-to-Region Transportation Optimization</h2>
+    <div class="method-tag">⚙ Linear programming — transportation problem (scipy.optimize.linprog)</div>
+
+    <div class="split">
+      <div class="prose">
+        <p>
+          <strong>The business question:</strong> three distribution centers each
+          have limited supply; three regions each need a certain volume. Per-unit
+          shipping cost varies by warehouse–region pair. Which warehouse should
+          serve which region, and how much, to minimize total freight spend while
+          fully meeting demand and never exceeding capacity?
+        </p>
+        <p>
+          This is the classic <strong>transportation problem</strong>, solved exactly
+          and efficiently with linear programming — no heuristics needed, and the
+          solver proves the plan is cost-minimal.
+        </p>
+        <div class="callout">
+          <b>Result:</b> the optimizer concentrates volume on the cheapest lanes —
+          e.g. Reno DC ships entirely to the East Region, its cheapest and
+          highest-demand destination. Total freight cost: <b>$5,830</b>, a
+          <b>12.0% reduction</b> versus a proportional allocation (splitting each
+          warehouse's supply across regions by demand share — a reasonable stand-in
+          for how volume gets split without an optimization step).
+        </div>
+
+        <div class="mini-compare">
+          <div class="mini-card">
+            <div class="tag">Proportional baseline</div>
+            <div class="num">$6,628.65</div>
+            <div class="detail">Volume split by demand share, cost-blind</div>
+          </div>
+          <div class="mini-card">
+            <div class="tag">Optimized plan</div>
+            <div class="num accent">$5,830.00</div>
+            <div class="detail">$798.65 saved (12.0%)</div>
+          </div>
+        </div>
+
+        <details class="code-toggle">
+          <summary>View the linear programming setup</summary>
+          <pre class="code">from scipy.optimize import linprog
+
+cost_matrix = [[20, 24, 11], [18, 22, 14], [25, 30, 10]]
+supply = [100, 120, 150]     # units available per warehouse
+demand = [80, 110, 180]      # units required per region
+
+# Equality constraints: ship exactly the supply out,
+# deliver exactly the demand in
+A_eq, b_eq = build_balance_constraints(supply, demand)
+
+result = linprog(
+    cost_vector, A_eq=A_eq, b_eq=b_eq,
+    bounds=[(0, None)] * len(cost_vector), method="highs"
+)</pre>
+        </details>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Optimal Shipment Plan (units)</div>
+        <div class="chart-subtitle">Warehouse capacity → region demand, cost-minimizing allocation</div>
+        <table class="heat">
+          <thead><tr><th></th><th>West Region</th><th>Central Region</th><th>East Region</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="row-head">Dallas DC</td>
+              <td><div class="cell empty">—</div></td>
+              <td><div class="cell" style="background:var(--seq-400); color:#fff;">70</div></td>
+              <td><div class="cell" style="background:var(--seq-250); color:#0b0b0b;">30</div></td>
+            </tr>
+            <tr>
+              <td class="row-head">Memphis DC</td>
+              <td><div class="cell" style="background:var(--seq-450); color:#fff;">80</div></td>
+              <td><div class="cell" style="background:var(--seq-300); color:#0b0b0b;">40</div></td>
+              <td><div class="cell empty">—</div></td>
+            </tr>
+            <tr>
+              <td class="row-head">Reno DC</td>
+              <td><div class="cell empty">—</div></td>
+              <td><div class="cell empty">—</div></td>
+              <td><div class="cell" style="background:var(--seq-700); color:#fff;">150</div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="scale-legend">
+          <span>0</span><div class="scale-bar"></div><span>150 units</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ROUTING ================= -->
+  <section id="routing">
+    <div class="eyebrow">Case study 3 of 3</div>
+    <h2>Delivery Route Optimization</h2>
+    <div class="method-tag">⚙ Combinatorial optimization — Traveling Salesman Problem (NetworkX)</div>
+
+    <div class="split">
+      <div class="prose">
+        <p>
+          <strong>The business question:</strong> a delivery truck leaves the
+          distribution hub, visits every store exactly once, and returns — in
+          which order should it drive to minimize total distance?
+        </p>
+        <p>
+          For a handful of stops, brute force can evaluate every possible route
+          and guarantee the true optimum. That approach does <strong>not
+          scale</strong> — route count grows factorially, so beyond roughly
+          10–12 stops a heuristic (nearest-neighbor + 2-opt, or a solver like
+          OR-Tools) is the right tool instead. Stating that limit explicitly,
+          rather than implying brute force generalizes, is part of using the
+          technique responsibly.
+        </p>
+        <div class="callout">
+          <b>Result:</b> the optimal route (Hub → Store A → Store C → Store B →
+          Hub) covers <b>80 miles</b>, versus <b>95 miles</b> for the
+          straightforward visiting order — a <b>15.8% reduction</b>. Run daily
+          (~250 delivery runs/year), that's roughly <b>3,750 miles/year</b> saved
+          on this single route.
+        </div>
+
+        <details class="code-toggle">
+          <summary>View the routing code</summary>
+          <pre class="code">from itertools import permutations
+
+def route_cost(route, G):
+    return (sum(G[route[i]][route[i+1]]["weight"]
+                for i in range(len(route) - 1))
+            + G[route[-1]][route[0]]["weight"])
+
+best_route, best_cost = None, float("inf")
+for perm in permutations(stops[1:]):
+    route = [stops[0]] + list(perm)
+    c = route_cost(route, G)
+    if c < best_cost:
+        best_route, best_cost = route, c</pre>
+        </details>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Optimal Route vs. All Possible Roads</div>
+        <div class="chart-subtitle">Highlighted path is the 80-mile optimal route</div>
+        <svg viewBox="0 0 400 400" width="100%" role="img" aria-label="Network diagram of delivery stops with optimal route highlighted">
+          <!-- context (non-route) edges -->
+          <g stroke="var(--axis)" stroke-width="2">
+            <line x1="304" y1="60"  x2="60"  y2="166"></line>
+            <line x1="340" y1="311" x2="103" y2="340"></line>
+          </g>
+          <!-- optimal route edges -->
+          <g stroke="var(--series-1)" stroke-width="4" stroke-linecap="round">
+            <line x1="304" y1="60"  x2="340" y2="311"></line>
+            <line x1="340" y1="311" x2="60"  y2="166"></line>
+            <line x1="60"  y1="166" x2="103" y2="340"></line>
+            <line x1="103" y1="340" x2="304" y2="60"></line>
+          </g>
+          <!-- edge distance labels -->
+          <g class="axis-label" text-anchor="middle">
+            <text x="322" y="192">10</text>
+            <text x="182" y="113">20</text>
+            <text x="200" y="245">25</text>
+            <text x="82"  y="257">30</text>
+            <text x="221" y="345">35</text>
+            <text x="204" y="197">15</text>
+          </g>
+          <!-- nodes -->
+          <g>
+            <circle cx="304" cy="60"  r="26" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="3"></circle>
+            <circle cx="340" cy="311" r="26" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="3"></circle>
+            <circle cx="103" cy="340" r="26" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="3"></circle>
+            <circle cx="60"  cy="166" r="26" fill="var(--series-1)" stroke="var(--surface-1)" stroke-width="3"></circle>
+          </g>
+          <g fill="#ffffff" font-weight="700" font-size="12" text-anchor="middle">
+            <text x="304" y="64">Hub</text>
+            <text x="340" y="315">A</text>
+            <text x="103" y="344">B</text>
+            <text x="60"  y="170">C</text>
+          </g>
+        </svg>
+        <div class="legend-row">
+          <span class="legend-item"><span class="swatch" style="background:var(--series-1)"></span>Optimal route (80 mi)</span>
+          <span class="legend-item"><span class="swatch" style="background:var(--axis)"></span>Other possible roads</span>
+        </div>
+        <details class="code-toggle">
+          <summary>View route detail</summary>
+          <table class="stack-table">
+            <thead><tr><th>Step</th><th>Leg</th><th>Distance</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Distribution Hub → Store A</td><td>10 mi</td></tr>
+              <tr><td>2</td><td>Store A → Store C</td><td>25 mi</td></tr>
+              <tr><td>3</td><td>Store C → Store B</td><td>30 mi</td></tr>
+              <tr><td>4</td><td>Store B → Distribution Hub</td><td>15 mi</td></tr>
+              <tr><td colspan="2"><strong>Total</strong></td><td><strong>80 mi</strong></td></tr>
+            </tbody>
+          </table>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= METHODOLOGY ================= -->
+  <section id="methodology">
+    <div class="eyebrow">How this was built</div>
+    <h2>Methodology &amp; Takeaways</h2>
+    <div class="prose" style="max-width:78ch">
+      <p>
+        Each case study is solved with the technique that fits its structure —
+        not one generic solver reused three times — and every result is checked
+        against a realistic baseline rather than reported in isolation.
+      </p>
+    </div>
+
+    <table class="stack-table" style="max-width: 760px;">
+      <thead><tr><th>Case study</th><th>Technique</th><th>Library</th><th>Why this technique</th></tr></thead>
+      <tbody>
+        <tr><td>Inventory lot-sizing</td><td>Dynamic programming</td><td>NumPy</td><td>Exact optimum for a discrete batching decision — no dependence on a starting guess</td></tr>
+        <tr><td>Warehouse allocation</td><td>Linear programming</td><td>SciPy (linprog)</td><td>Guaranteed-optimal, efficient at scale for balanced supply/demand networks</td></tr>
+        <tr><td>Delivery routing</td><td>Combinatorial search</td><td>NetworkX</td><td>Exact for small stop counts; explicitly flagged where it stops scaling</td></tr>
+      </tbody>
+    </table>
+
+    <div class="takeaway-list">
+      <div class="takeaway">
+        <div class="num">1</div>
+        <p><strong>Match the algorithm to the structure of the decision</strong>, not just the objective — a continuous solver was replaced with an exact dynamic program once the decision was recognized as discrete.</p>
+      </div>
+      <div class="takeaway">
+        <div class="num">2</div>
+        <p><strong>Always benchmark against a realistic baseline.</strong> "12% below proportional allocation" is a business case; "$5,830" alone is not.</p>
+      </div>
+      <div class="takeaway">
+        <div class="num">3</div>
+        <p><strong>Test sensitivity, not just the base case.</strong> The $400 order-cost what-if turns a single answer into a decision rule a procurement team can use.</p>
+      </div>
+      <div class="takeaway">
+        <div class="num">4</div>
+        <p><strong>State an algorithm's scaling limits explicitly.</strong> Brute-force routing is exact for 4 stops and unusable for 40 — worth saying, not implying otherwise.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-grid">
+      <div>
+        <div class="foot-title">Rudy Estrella</div>
+        <p>Data Analytics Portfolio</p>
+        <p><a href="mailto:rudyestrella1@gmail.com">rudyestrella1@gmail.com</a></p>
+        <a class="btn" href="supply chain optimizacion.ipynb">Open the source Jupyter notebook →</a>
+      </div>
+      <div>
+        <p style="max-width: 40ch;">Built with Python, NumPy, SciPy, and NetworkX. Full working code, sensitivity checks, and baseline comparisons are in the accompanying notebook.</p>
+        <p style="max-width: 40ch; color: var(--text-muted); font-size: 12.5px;">Analysis, code, and this report were developed with Claude (Anthropic) as an AI coding agent, under my direction and review.</p>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('themeToggle');
+    var root = document.documentElement;
+    var saved = localStorage.getItem('scr-theme');
+    function apply(mode) {
+      if (mode === 'dark') { root.setAttribute('data-theme', 'dark'); toggle.textContent = 'Light mode'; }
+      else { root.setAttribute('data-theme', 'light'); toggle.textContent = 'Dark mode'; }
+    }
+    if (saved) apply(saved);
+    else {
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      toggle.textContent = prefersDark ? 'Light mode' : 'Dark mode';
+    }
+    toggle.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      var next = current === 'dark' ? 'light' : 'dark';
+      apply(next);
+      localStorage.setItem('scr-theme', next);
+    });
+
+    var links = Array.prototype.slice.call(document.querySelectorAll('#menu a'));
+    var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var id = '#' + entry.target.id;
+        var link = links.find(function (a) { return a.getAttribute('href') === id; });
+        if (!link) return;
+        if (entry.isIntersecting) {
+          links.forEach(function (a) { a.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function (s) { observer.observe(s); });
+  })();
+</script>
+</body>
+</html>
